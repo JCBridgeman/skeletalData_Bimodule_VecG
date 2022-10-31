@@ -7,12 +7,13 @@ obsC=obC[#]&/@Range[0,GroupOrder[G$]-1];
 V[obC[a_],obC[b_]][obC[c_]]:=V[obC[a],obC[b]][obC[c]]=If[GEls[[a+1]]\[PermutationProduct]GEls[[b+1]]==GEls[[c+1]],1,0];
 
 objNames[obC[x_]]:=objNames[obC[x]]=Module[
-{w=GroupElementToWord[G$,GEls[[x+1]]],n,name,f,gens=GroupGenerators[G$]},
+{w=GroupElementToWord[G$,GEls[[x+1]]],n,name,f,gens=GroupGenerators[G$],t},
 If[Length[w]==0,Return[1]];
+
 f[q_]:=If[q>0,Subscript[\[Sigma], q],Power[Subscript[\[Sigma], Abs[q]],PermutationOrder[gens[[Abs[q]]]]-1]];
 
-name=PermutationProduct@@(f[#]&/@w);
-Return[name]
+name=(PermutationProduct@@(f[#]&/@w)//.{PermutationPower[Subscript[\[Sigma], t_],z_]:>\!\(\*SubsuperscriptBox[\(\[Sigma]\), \(t\), \(Mod[z, PermutationOrder[gens[\([\)\(t\)\(]\)]]]\)]\)});
+Return[name//.{PermutationPower[Subscript[\[Sigma], t_]^y_,z_]:>\!\(\*SubsuperscriptBox[\(\[Sigma]\), \(t\), \(Mod[y\ z, PermutationOrder[gens[\([\)\(t\)\(]\)]]]\)]\)}]
 ];
 
 FData[0]={X0[a_,b_,c_][d_][1,e_,1][1,f_,1]:>1};
